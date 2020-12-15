@@ -25,7 +25,7 @@ public class Main {
             e.printStackTrace();
         }
         System.out.println(company.toString());
-        System.out.println("-12% salary increase (should cause error, nothing should change)");
+        System.out.println("-12% salary increase (should cause an exception, nothing should change in the company)");
         try {
             company.increaseSalary(-12f);
         } catch (Exception e) {
