@@ -1,28 +1,38 @@
 package Lab12;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 public class Company {
-    private Vector<Person> employees = new Vector<Person>();
+    private Person[] employees;
 
-    public Company(Vector<Person> employees) {
+    public Company(Person[] employees) {
         this.employees = employees;
     }
 
     public Company() {
+        employees = null;
     }
 
     public boolean addEmployee(Person newEmployee) {
-        if (employees.contains(newEmployee)) return false;
-        return employees.add(newEmployee);
+        if(employees == null){
+            employees = new Person[] {newEmployee};
+            return true;
+        }
+        Person[] newArray = new Person[employees.length + 1];
+        for (int i = 0; i < employees.length; i++) {
+            //check if employee already exists
+            if (employees[i] == newEmployee) return false;
+            newArray[i] = employees[i];
+        }
+        newArray[newArray.length - 1] = newEmployee;
+        employees = newArray;
+        return true;
     }
 
     public void addEmployee(Person... newEmployees) {
-        for (Person newEmployee : newEmployees) {
-            if (employees.contains(newEmployee)) continue;
-            employees.add(newEmployee);
-
-        }
+        for (Person newEmployee : newEmployees)
+            addEmployee(newEmployee);
     }
 
     public void increaseSalary(float percentage) throws Exception {
@@ -38,7 +48,7 @@ public class Company {
     @Override
     public String toString() {
         return "Company{" +
-                "employees=" + employees +
+                "employees=" + Arrays.toString(employees) +
                 '}';
     }
 }
