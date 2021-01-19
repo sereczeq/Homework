@@ -4,12 +4,17 @@ import java.util.Arrays;
 
 public class MergeSort {
     private int threads = 0;
-    private final int maxThreads = 8;
+    private final int maxThreads;
+
+    public MergeSort()
+    {
+        maxThreads = Runtime.getRuntime().availableProcessors();
+    }
 
     public int[] sort(int[] array)
     {
         if (array.length <= 1) return array;
-        else if (threads++ < maxThreads) {
+        else if (threads++ < maxThreads/2 /* because two threads are run each time */) {
             final int[][] arr1 = new int[1][1]; //IDE made this automatically, it works so thanks JetBrains
             final int[][] arr2 = new int[1][1];
             Thread t1 = new Thread(() -> arr1[0] = sort(split(array)[0]));
