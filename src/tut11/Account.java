@@ -17,7 +17,7 @@ public class Account {
         return this.balance -= amount;
     }
 
-    public int income(int amount)
+    public int deposit(int amount)
     {
         return this.balance += amount;
     }

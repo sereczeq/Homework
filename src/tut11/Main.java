@@ -13,7 +13,7 @@ public class Main {
 
         new Thread(ones(account)).start();
         new Thread(random(account)).start();
-        new Thread(income(account)).start();
+        new Thread(deposit(account)).start();
         new Thread(withdraw(account)).start();
         TimeUnit.MILLISECONDS.sleep(1000); //to make sure tasks are finished
         System.out.println("Final account value (should be 1000): " + account);
@@ -23,7 +23,7 @@ public class Main {
         account  = new AccountSynchronized(1000);
         new Thread(ones(account)).start();
         new Thread(random(account)).start();
-        new Thread(income(account)).start();
+        new Thread(deposit(account)).start();
         new Thread(withdraw(account)).start();
         TimeUnit.MILLISECONDS.sleep(1000); //to make sure tasks are finished
         System.out.println("Final account (synchronized) value (should be 1000): " + account);
@@ -44,25 +44,31 @@ public class Main {
     static Runnable random(Account account)
     {
         return () -> {
-        account.withdraw(100);
-        account.withdraw(200);
-        account.income(400);
-        account.withdraw(100);
+            for(int i = 0; i < 10000; i++)
+            {
+                account.withdraw(100);
+                account.withdraw(200);
+                account.deposit(400);
+                account.withdraw(100);
+            }
         System.out.println("random");
     };
     }
 
-    static Runnable income(Account account)
+    static Runnable deposit(Account account)
     {
         return () -> {
-            account.income(10);     //10
-            account.income(30);     //40
-            account.income(40);     //80
-            account.income(30);     //110
-            account.income(100);    //210
-            account.income(130);    //340
-            account.income(170);    //510
-            account.income(100);    //610
+            for(int i = 0; i < 10000; i++)
+            {
+            account.deposit(10);     //10
+            account.deposit(30);     //40
+            account.deposit(40);     //80
+            account.deposit(30);     //110
+            account.deposit(100);    //210
+            account.deposit(130);    //340
+            account.deposit(170);    //510
+            account.deposit(100);    //610
+            }
             System.out.println("income");
         };
     }
@@ -70,6 +76,8 @@ public class Main {
     static Runnable withdraw(Account account)
     {
         return () -> {
+            for(int i = 0; i < 10000; i++)
+            {
             account.withdraw(30);   //30
             account.withdraw(20);   //50
             account.withdraw(49);   //99
@@ -78,6 +86,7 @@ public class Main {
             account.withdraw(177);  //477
             account.withdraw(33);   //510
             account.withdraw(100);  //610
+            }
             System.out.println("withdraw");
         };
     }
@@ -87,7 +96,7 @@ public class Main {
         return () -> {
             for (int i = 0; i < 10000; i++) {
                 account.withdraw(1);
-                account.income(1);
+                account.deposit(1);
             }
             System.out.println("ones");
         };

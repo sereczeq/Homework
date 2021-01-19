@@ -10,8 +10,8 @@ public class AccountSynchronized extends Account {
     }
 
     @Override
-    public synchronized int income(int amount) {
-        return super.income(amount);
+    public synchronized int deposit(int amount) {
+        return super.deposit(amount);
     }
 
     @Override
