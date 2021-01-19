@@ -1,48 +1,30 @@
 package lab13;
 
-import javafx.util.Pair;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
+import java.util.Arrays;
+import java.util.Vector;
 
 public class MergeSort {
-    static int[] sort(int[] array) throws InterruptedException {
+    int threads = 0;
+    final int maxThreads = 8;
+    int[] sort(int[] array){
         if(array.length <= 1) return array;
-        else //return merge(sort(split(array)[0]), sort(split(array)[1]));
-        {
-            int[] arr1 = split(array)[0];
-            int[] arr2 = split(array)[1];
-            final int[][] finalArray = new int[1][1];
-            final int[][] finalArray2 = new int[1][1];
-            Thread t1 = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        finalArray[0] = sort(arr1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            Thread t2 = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                       finalArray2[0] = sort(arr2);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+        else if (++threads <maxThreads) {
+            final int[][] arr1 = new int[1][1]; //IDE made this automatically, it works so thanks JetBrains
+            final int[][] arr2 = new int[1][1];
+            Thread t1 = new Thread(() -> arr1[0] = sort(split(array)[0]));
+            Thread t2 = new Thread(() -> arr2[0] = sort(split(array)[1]));
             t1.start();
             t2.start();
-            t1.join();
-            t2.join();
-            return merge(finalArray[0], finalArray2[0]);
+            try {
+                t1.join();
+                t2.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return merge(arr1[0], arr2[0]);
         }
+           else return merge(sort(split(array)[0]), sort(split(array)[1]));
+
     }
 
     static int[] merge(int[] array1, int[] array2)
@@ -58,10 +40,6 @@ public class MergeSort {
 
     static int[][] split(int[] array)
     {
-        int[] newArray1 = new int[array.length/2];
-        int[] newArray2 = new int[array.length - newArray1.length];
-        System.arraycopy(array, 0, newArray1, 0, newArray1.length);
-        System.arraycopy(array, newArray1.length, newArray2, 0, newArray2.length);
-        return new int[][]{newArray1, newArray2};
+        return new int[][]{Arrays.copyOf(array, array.length/2), Arrays.copyOfRange(array, array.length/2, array.length)};
     }
 }
