@@ -1,12 +1,7 @@
 package tut14;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
 import java.util.concurrent.TimeUnit;
-import java.util.stream.LongStream;
 
 public class Main {
     public static void main(String[] args) {
@@ -25,9 +20,9 @@ public class Main {
         //Task 3
         System.out.println("Task 3");
         final int howManyTimes = 10;
-        final int period = 2;
-        Observable.intervalRange(1, howManyTimes, 0, period, TimeUnit.SECONDS).take(howManyTimes)
-                .scan((x, y) -> x * y).subscribe(System.out::println);
+        final int period = 20;
+        Observable.intervalRange(1, howManyTimes, 0, period, TimeUnit.SECONDS).
+                take(howManyTimes).scan((x, y) -> x * y).subscribe(System.out::println);
         try {
             TimeUnit.SECONDS.sleep(howManyTimes * period);
         } catch (InterruptedException e) {
